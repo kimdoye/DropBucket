@@ -1,0 +1,13 @@
+services:
+  dropbucket:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      DROPBUCKET_DB_PATH: /data/dropbucket.sqlite
+      DROPBUCKET_OBJECT_DIR: /data/objects
+    volumes:
+      - dropbucket-data:/data
+
+volumes:
+  dropbucket-data:

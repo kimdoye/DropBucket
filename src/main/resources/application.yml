@@ -1,0 +1,26 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: dropbucket
+  datasource:
+    url: jdbc:sqlite:${DROPBUCKET_DB_PATH:/data/dropbucket.sqlite}
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  servlet:
+    multipart:
+      max-file-size: ${DROPBUCKET_MAX_FILE_SIZE:100MB}
+      max-request-size: ${DROPBUCKET_MAX_REQUEST_SIZE:100MB}
+
+dropbucket:
+  storage:
+    object-dir: ${DROPBUCKET_OBJECT_DIR:/data/objects}
