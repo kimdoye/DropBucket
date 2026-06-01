@@ -60,14 +60,15 @@ class StorageControllerTest {
                 "hello dropbucket".getBytes()
         );
 
-        String location = mockMvc.perform(multipart("/api/storage/docs").file(file))
+        String responseBody = mockMvc.perform(multipart("/api/storage/docs").file(file))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", containsString("/api/storage/docs/")))
+                .andExpect(jsonPath("$.id").value(notNullValue()))
                 .andReturn()
                 .getResponse()
-                .getHeader("Location");
+                .getContentAsString();
 
-        String id = location.substring(location.lastIndexOf("/") + 1);
+        String id = JsonPath.read(responseBody, "$.id");
 
         mockMvc.perform(get("/api/storage/docs/{id}/info", id))
                 .andExpect(status().isOk())

@@ -44,10 +44,10 @@ public class StorageController {
      *
      * @param bucketName name of the bucket
      * @param file the file to upload
-     * @return a ResponseEntity with the created location header and no body
+     * @return a ResponseEntity with the created location header and the UploadResponse body
      */
     @PostMapping(path = "/{bucketName}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> upload(
+    public ResponseEntity<UploadResponse> upload(
             @PathVariable String bucketName,
             @RequestPart("file") MultipartFile file
     ) {
@@ -56,7 +56,7 @@ public class StorageController {
                 .path("/{id}")
                 .buildAndExpand(metadata.getId())
                 .toUri();
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(new UploadResponse(metadata.getId()));
     }
 
     /**
