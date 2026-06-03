@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 /**
  * REST controller for managing storage operations via HTTP.
@@ -82,6 +83,20 @@ public class StorageController {
                                 .toString()
                 )
                 .body(storedObject.resource());
+    }
+
+    /**
+     * Lists metadata for all files within a specific bucket.
+     *
+     * @param bucketName name of the bucket
+     * @return list of metadata responses for every file in the bucket
+     */
+    @GetMapping("/{bucketName}")
+    public List<MetadataResponse> listBucket(@PathVariable String bucketName) {
+        return storageService.listBucket(bucketName)
+                .stream()
+                .map(MetadataResponse::from)
+                .toList();
     }
 
     /**

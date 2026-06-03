@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -114,6 +115,18 @@ public class StorageService {
         validateBucketName(bucketName);
         return repository.findByBucketNameAndId(bucketName, id)
                 .orElseThrow(() -> new StorageObjectNotFoundException(bucketName, id));
+    }
+
+    /**
+     * Lists metadata for all files within a specific bucket.
+     *
+     * @param bucketName name of the bucket
+     * @return list of file metadata for every file in the bucket
+     */
+    @Transactional(readOnly = true)
+    public List<FileMetadata> listBucket(String bucketName) {
+        validateBucketName(bucketName);
+        return repository.findAllByBucketName(bucketName);
     }
 
     /**

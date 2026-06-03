@@ -104,6 +104,24 @@ class StorageControllerTest {
     }
 
     @Test
+    void listsBucketReturnsMetadataForAllFiles() throws Exception {
+        MockMultipartFile fileA = new MockMultipartFile("file", "alpha.txt", "text/plain", "alpha".getBytes());
+        MockMultipartFile fileB = new MockMultipartFile("file", "beta.txt", "text/plain", "beta".getBytes());
+
+        mockMvc.perform(multipart("/api/storage/listing-test").file(fileA))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(multipart("/api/storage/listing-test").file(fileB))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/api/storage/listing-test"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].bucketName").value("listing-test"))
+                .andExpect(jsonPath("$[1].bucketName").value("listing-test"));
+    }
+
+    @Test
     void returnsNotFoundForMissingObject() throws Exception {
         mockMvc.perform(get("/api/storage/docs/00000000-0000-0000-0000-000000000000/info"))
                 .andExpect(status().isNotFound());
